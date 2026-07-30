@@ -21,7 +21,11 @@ if (sendBtn) {
         }
 
         // พาร์ตต่อไปจะส่งข้อมูลไป Google Sheets ตรงนี้
-        window.location.href = "receive.html";
+    localStorage.setItem("bookID",book);
+
+localStorage.setItem("email",email);
+
+window.location.href="receive.html";
     });
 }
 // หน้า receive
