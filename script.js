@@ -1,3 +1,4 @@
+const API_URL = "https://script.google.com/macros/s/AKfycbwLLZOVkKMhSHkkhBAC6NukjvP3beoSAu7VYXt71vQx4ZMkXwY-53aqpPjSU0wm1rruew/exec";
 // หน้าแรก
 if (document.getElementById("idle")) {
     document.body.addEventListener("click", () => {
