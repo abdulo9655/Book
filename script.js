@@ -1,115 +1,120 @@
+// =======================
 // หน้าแรก
+// =======================
+
 const idle = document.getElementById("idle");
 
-if (idle) {
+if(idle){
 
-    document.body.addEventListener("click", function(){
+    document.body.onclick = function(){
 
         window.location.href = "form.html";
 
-    });
+    };
 
 }
 
 
-// หน้ากรอกข้อมูล
+
+// =======================
+// หน้าส่งคืน
+// =======================
+
 const sendBtn = document.getElementById("sendBtn");
+
 
 if(sendBtn){
 
-sendBtn.onclick = function(){
+    sendBtn.onclick = function(){
 
-    const book = document.getElementById("bookID").value;
-    const email = document.getElementById("email").value;
-
-
-    if(book === "" || email === ""){
-
-        alert("กรุณากรอกข้อมูลให้ครบ");
-
-        return;
-
-    }
+        let book =
+        document.getElementById("bookID").value;
 
 
-    localStorage.setItem("bookID",book);
-    localStorage.setItem("email",email);
+        let email =
+        document.getElementById("email").value;
 
 
-    window.location.href="receive.html";
+        if(book==="" || email===""){
 
-};
+            alert("กรุณากรอกข้อมูลให้ครบ");
+
+            return;
+
+        }
+
+
+        localStorage.setItem(
+            "bookID",
+            book
+        );
+
+
+        localStorage.setItem(
+            "email",
+            email
+        );
+
+
+        window.location.href =
+        "receive.html";
+
+    };
 
 }
 
 
-// หน้าวางหนังสือ
 
-const placedBtn = document.getElementById("placedBtn");
+// =======================
+// หน้าวางหนังสือ
+// =======================
+
+const placedBtn =
+document.getElementById("placedBtn");
 
 
 if(placedBtn){
 
-placedBtn.onclick=function(){
 
-    window.location.href="checking.html";
+    // เสียงทันทีเมื่อเปิดหน้า
 
-};
+    let speech =
+    new SpeechSynthesisUtterance(
+    "ระบบได้รับข้อมูลแล้ว กรุณาวางหนังสือไว้ในตู้ค่ะ"
+    );
 
-}const speech=new SpeechSynthesisUtterance(
 
-"ระบบได้รับข้อมูลแล้ว กรุณาวางหนังสือไว้ในตู้ค่ะ"
+    speech.lang="th-TH";
 
-);
 
-speech.lang="th-TH";
+    speechSynthesis.speak(speech);
 
-speechSynthesis.speak(speech);
 
-placedBtn.onclick = async ()=>{
 
-const book =
-localStorage.getItem("bookID");
+    placedBtn.onclick=function(){
 
-const email =
-localStorage.getItem("email");
 
-await fetch(API_URL,{
+        let speech2 =
+        new SpeechSynthesisUtterance(
+        "กำลังตรวจสอบ กรุณารอสักครู่ค่ะ"
+        );
 
-method:"POST",
 
-body:JSON.stringify({
+        speech2.lang="th-TH";
 
-bookId:book,
 
-email:email
+        speechSynthesis.speak(speech2);
 
-})
 
-});
 
-window.location="checking.html";
+        setTimeout(()=>{
 
-};
+            window.location.href =
+            "checking.html";
 
-// หน้า checking
+        },3000);
 
-if(location.pathname.includes("checking")){
 
-const speech2=new SpeechSynthesisUtterance(
-
-"กำลังตรวจสอบ กรุณารอสักครู่ค่ะ"
-
-);
-
-speech2.lang="th-TH";
-
-speechSynthesis.speak(speech2);
-
-setTimeout(()=>{
-
-window.location="finish.html";
-
-},4000);
+    };
 
 }
