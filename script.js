@@ -1,251 +1,23 @@
 const API_URL =
-"https://script.google.com/macros/s/AKfycbxXRl4vQ5zNHNIms1NmxDNOHwQ5wzzJ2O-GNGYsV1XjosjgTJCegbzEEtaGOST9duZ/exec";
+"https://script.google.com/macros/s/AKfycbxXRl4vQH5zNHNIms1NmxDNOHwQ5wzzJ2O-GNGYsV1XjosjgTJCegbzEEtaGOST9duZ/exec";
 
 
-const standby = document.getElementById("standby");
-const system = document.getElementById("system");
+const rfidInput =
+document.getElementById("rfidInput");
 
-const rfidInput = document.getElementById("rfidInput");
-const result = document.getElementById("result");
-const returnBtn = document.getElementById("returnBtn");
+const result =
+document.getElementById("result");
+
+const returnBtn =
+document.getElementById("returnBtn");
 
 
 let currentBook = null;
 
 
 
-// แตะหน้าแรกเพื่อเริ่ม
+// แก้ RFID ภาษาไทยเพี้ยน
 
-if(standby){
-
-standby.onclick=function(){
-
-    standby.style.display="none";
-
-    system.style.display="block";
-
-    setTimeout(()=>{
-
-        if(rfidInput){
-            rfidInput.focus();
-        }
-
-    },300);
-
-};
-
-}
-
-
-
-// แก้ RFID เพี้ยน
-
-function normalizeRFID(input){
-
-const map={
-
-"จ":"0",
-"ข":"1",
-"ฃ":"2",
-"๓":"3",
-"๔":"4",
-"ู":"5",
-"ึ":"6",
-"ค":"7",
-"ต":"8",
-"ๅ":"1",
-"ภ":"2",
-"ถ":"3",
-"ุ":"4"
-
-};
-
-
-let result="";
-
-
-for(let c of input){
-
-result += map[c] ?? c;
-
-}
-
-
-return result;
-
-}
-
-
-
-
-// อ่าน RFID
-
-if(rfidInput){
-
-rfidInput.addEventListener("keydown",async(e)=>{
-
-
-if(e.key==="Enter"){
-
-
-let rfid =
-normalizeRFID(
-rfidInput.value.trim()
-);
-
-
-
-if(!rfid)return;
-
-
-
-result.innerHTML =
-"⏳ กำลังค้นหา...";
-
-
-
-try{
-
-
-let res =
-await fetch(API_URL,{
-
-method:"POST",
-
-body:JSON.stringify({
-
-rfid:rfid
-
-})
-
-});
-
-
-
-let data =
-await res.json();
-
-
-
-if(data.success){
-
-
-currentBook=data.book;
-
-
-result.innerHTML=`
-
-<h2>✅ พบหนังสือ</h2>
-
-<p>📚 ${data.book.name}</p>
-
-<p>รหัส ${data.book.code}</p>
-
-`;
-
-
-}else{
-
-
-result.innerHTML="❌ ไม่พบหนังสือ";
-
-
-}
-
-
-}catch(err){
-
-result.innerHTML="⚠️ เชื่อมต่อไม่ได้";
-
-}
-
-
-}
-
-
-});
-
-}
-
-
-
-
-// คืนหนังสือ
-
-if(returnBtn){
-
-returnBtn.onclick=async()=>{
-
-
-if(!currentBook){
-
-alert("กรุณาแตะ RFID ก่อน");
-
-return;
-
-}
-
-
-
-let email =
-prompt("กรอก Email");
-
-
-if(!email)return;
-
-
-
-result.innerHTML="⏳ กำลังส่งข้อมูล...";
-
-
-
-await fetch(API_URL,{
-
-method:"POST",
-
-body:JSON.stringify({
-
-rfid:currentBook.rfid,
-
-email:email
-
-})
-
-});
-
-
-
-result.innerHTML=`
-
-<h1>✅ คืนหนังสือสำเร็จ</h1>
-
-<p>ส่ง Email แล้ว</p>
-
-<p>ขอบคุณที่ใช้บริการ</p>
-
-`;
-
-
-
-setTimeout(()=>{
-
-location.reload();
-
-},8000);
-
-
-
-};
-
-}
-
-
-let currentBook = null;
-let lastRFID = "";
-
-
-
-// แก้ RFID เพี้ยนภาษาไทย
 function normalizeRFID(input){
 
 
@@ -268,22 +40,19 @@ const map = {
 };
 
 
-let output = "";
+let output="";
 
 
-for(let i=0;i<input.length;i++){
+for(let char of input){
 
 
-let c = input[i];
+if(map[char]){
 
-
-if(map[c]){
-
-output += map[c];
+output += map[char];
 
 }else{
 
-output += c;
+output += char;
 
 }
 
@@ -293,14 +62,14 @@ output += c;
 
 return output;
 
-
 }
 
 
 
-// เปิดเว็บให้พร้อมรับ RFID
+// เปิดเว็บให้ช่อง RFID พร้อม
 
 window.onload=function(){
+
 
 if(rfidInput){
 
@@ -308,12 +77,13 @@ rfidInput.focus();
 
 }
 
+
 };
 
 
 
 
-// รับค่า RFID
+// รับ RFID
 
 if(rfidInput){
 
@@ -333,20 +103,7 @@ rfidInput.value.trim()
 
 
 
-if(!rfid) return;
-
-
-
-// กันแตะซ้ำ
-
-if(rfid===lastRFID){
-
-return;
-
-}
-
-
-lastRFID = rfid;
+if(!rfid)return;
 
 
 
@@ -412,7 +169,7 @@ ${data.book.rfid}
 
 
 result.innerHTML =
-"❌ ไม่พบข้อมูลหนังสือ";
+"❌ ไม่พบหนังสือ";
 
 
 }
@@ -439,12 +196,12 @@ result.innerHTML =
 
 
 
-// ปุ่มคืนหนังสือ
+// ส่งคืนหนังสือ
 
 if(returnBtn){
 
 
-returnBtn.onclick = async function(){
+returnBtn.onclick=async function(){
 
 
 if(!currentBook){
@@ -464,17 +221,17 @@ return;
 
 let email =
 prompt(
-"กรุณากรอก Email เพื่อรับผลการคืน"
+"กรุณากรอก Email"
 );
 
 
 
-if(!email) return;
+if(!email)return;
 
 
 
 result.innerHTML =
-"⏳ กำลังบันทึกข้อมูล...";
+"⏳ กำลังส่งข้อมูล...";
 
 
 
@@ -516,8 +273,8 @@ result.innerHTML = `
 </p>
 
 
-<p id="countdown">
-รีเซ็ตใน 10 วินาที
+<p>
+ตู้พร้อมใช้งานอีกครั้ง
 </p>
 
 
@@ -527,43 +284,13 @@ result.innerHTML = `
 
 
 
-let time = 10;
+setTimeout(()=>{
 
-
-let timer =
-setInterval(()=>{
-
-
-time--;
-
-
-let c =
-document.getElementById("countdown");
-
-
-if(c){
-
-c.innerHTML =
-"รีเซ็ตใน "
-+time+
-" วินาที";
-
-}
-
-
-
-if(time<=0){
-
-
-clearInterval(timer);
 
 location.reload();
 
 
-}
-
-
-},1000);
+},8000);
 
 
 
@@ -577,43 +304,8 @@ result.innerHTML =
 }
 
 
+
 };
 
 
 }
-let idleTimer;
-
-
-function resetIdle(){
-
-
-clearTimeout(idleTimer);
-
-
-
-idleTimer=setTimeout(()=>{
-
-
-location.reload();
-
-
-},60000);
-
-
-}
-
-
-
-document.addEventListener(
-"mousemove",
-resetIdle
-);
-
-
-document.addEventListener(
-"keydown",
-resetIdle
-);
-
-
-resetIdle();
