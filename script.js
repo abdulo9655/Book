@@ -2,127 +2,204 @@ const API_URL =
 "https://script.google.com/macros/s/AKfycbxXRl4vQ5zNHNIms1NmxDNOHwQ5wzzJ2O-GNGYsV1XjosjgTJCegbzEEtaGOST9duZ/exec";
 
 
+
 const rfidInput = document.getElementById("rfidInput");
 const result = document.getElementById("result");
 const returnBtn = document.getElementById("returnBtn");
 
 
+
 let currentBook = null;
+let lastRFID = "";
 
 
-// เปิดหน้ามาให้พร้อมรับ RFID
-window.onload = function(){
 
-    if(rfidInput){
+// แก้ RFID เพี้ยนภาษาไทย
+function normalizeRFID(input){
 
-        rfidInput.focus();
 
-    }
+const map = {
+
+"จ":"0",
+"ข":"1",
+"ฃ":"2",
+"๓":"3",
+"๔":"4",
+"ู":"5",
+"ึ":"6",
+"ค":"7",
+"ต":"8",
+"ๅ":"1",
+"ภ":"2",
+"ถ":"3",
+"ุ":"4"
+
+};
+
+
+let output = "";
+
+
+for(let i=0;i<input.length;i++){
+
+
+let c = input[i];
+
+
+if(map[c]){
+
+output += map[c];
+
+}else{
+
+output += c;
+
+}
+
+
+}
+
+
+return output;
+
+
+}
+
+
+
+// เปิดเว็บให้พร้อมรับ RFID
+
+window.onload=function(){
+
+if(rfidInput){
+
+rfidInput.focus();
+
+}
 
 };
 
 
 
-// รับ RFID จากเครื่องอ่าน
+
+// รับค่า RFID
 
 if(rfidInput){
 
-rfidInput.addEventListener("keydown", async function(e){
+
+rfidInput.addEventListener(
+"keydown",
+async function(e){
 
 
-    if(e.key === "Enter"){
+if(e.key==="Enter"){
 
 
-        let rfid =
-        rfidInput.value.trim();
-
-
-
-        if(!rfid) return;
-
-
-
-        result.innerHTML = 
-        "⏳ กำลังค้นหาหนังสือ...";
+let rfid =
+normalizeRFID(
+rfidInput.value.trim()
+);
 
 
 
-        try{
-
-
-            let response =
-            await fetch(API_URL,{
-
-                method:"POST",
-
-                body:JSON.stringify({
-
-                    rfid:rfid
-
-                })
-
-            });
+if(!rfid) return;
 
 
 
-            let data =
-            await response.json();
+// กันแตะซ้ำ
+
+if(rfid===lastRFID){
+
+return;
+
+}
+
+
+lastRFID = rfid;
 
 
 
-            if(data.success){
-
-
-                currentBook =
-                data.book;
+result.innerHTML =
+"⏳ กำลังค้นหาหนังสือ...";
 
 
 
-                result.innerHTML = `
-
-                <h2>
-                ✅ พบหนังสือ
-                </h2>
-
-                <p>
-                📚 ${data.book.name}
-                </p>
-
-                <p>
-                รหัส:
-                ${data.book.code}
-                </p>
-
-                <p>
-                RFID:
-                ${data.book.rfid}
-                </p>
-
-                `;
+try{
 
 
-            }else{
+let response =
+await fetch(API_URL,{
 
+method:"POST",
 
-                result.innerHTML =
-                "❌ ไม่พบข้อมูลหนังสือ";
+body:JSON.stringify({
 
+rfid:rfid
 
-            }
+})
+
+});
 
 
 
-        }catch(error){
+let data =
+await response.json();
 
 
-            result.innerHTML =
-            "⚠️ เชื่อมต่อระบบไม่ได้";
+
+if(data.success){
 
 
-        }
+currentBook =
+data.book;
 
 
-    }
+
+result.innerHTML = `
+
+<h2>✅ พบหนังสือ</h2>
+
+<p>
+📚 ${data.book.name}
+</p>
+
+<p>
+รหัสหนังสือ :
+${data.book.code}
+</p>
+
+<p>
+RFID :
+${data.book.rfid}
+</p>
+
+`;
+
+
+
+}else{
+
+
+result.innerHTML =
+"❌ ไม่พบข้อมูลหนังสือ";
+
+
+}
+
+
+
+}catch(error){
+
+
+result.innerHTML =
+"⚠️ เชื่อมต่อระบบไม่ได้";
+
+
+}
+
+
+
+}
 
 
 });
@@ -139,138 +216,134 @@ if(returnBtn){
 returnBtn.onclick = async function(){
 
 
-    if(!currentBook){
+if(!currentBook){
 
 
-        alert(
-        "กรุณาแตะ RFID หนังสือก่อน"
-        );
+alert(
+"กรุณาแตะ RFID หนังสือก่อน"
+);
 
-        return;
 
-    }
+return;
 
 
+}
 
-    let email =
-    prompt(
-    "กรุณากรอก Email เพื่อรับผลการคืน"
-    );
 
 
+let email =
+prompt(
+"กรุณากรอก Email เพื่อรับผลการคืน"
+);
 
-    if(!email) return;
 
 
+if(!email) return;
 
-    result.innerHTML =
-    "⏳ กำลังบันทึกข้อมูล...";
 
 
+result.innerHTML =
+"⏳ กำลังบันทึกข้อมูล...";
 
-    try{
 
 
-        await fetch(API_URL,{
+try{
 
-            method:"POST",
 
-            body:JSON.stringify({
+await fetch(API_URL,{
 
-                rfid:currentBook.rfid,
+method:"POST",
 
-                email:email
+body:JSON.stringify({
 
-            })
+rfid:currentBook.rfid,
 
-        });
+email:email
 
+})
 
+});
 
-        result.innerHTML = `
 
-        <div class="success-box">
 
+result.innerHTML = `
 
-        <h1>
-        ✅ คืนหนังสือสำเร็จ
-        </h1>
+<div class="success-box">
 
+<h1>
+✅ คืนหนังสือสำเร็จ
+</h1>
 
-        <p>
-        ระบบได้ส่ง Email ยืนยันแล้ว
-        </p>
 
+<p>
+ระบบส่ง Email ยืนยันแล้ว
+</p>
 
-        <p>
-        ขอบคุณที่ใช้บริการ
-        </p>
 
+<p>
+ขอบคุณที่ใช้บริการ
+</p>
 
-        <p id="countdown">
 
-        รีเซ็ตใน 10 วินาที
+<p id="countdown">
+รีเซ็ตใน 10 วินาที
+</p>
 
-        </p>
 
+</div>
 
-        </div>
+`;
 
-        `;
 
 
+let time = 10;
 
-        let time = 10;
 
+let timer =
+setInterval(()=>{
 
-        let timer =
-        setInterval(function(){
 
+time--;
 
-            time--;
 
+let c =
+document.getElementById("countdown");
 
-            let c =
-            document.getElementById("countdown");
 
+if(c){
 
-            if(c){
+c.innerHTML =
+"รีเซ็ตใน "
++time+
+" วินาที";
 
-                c.innerHTML =
-                "รีเซ็ตใน "
-                +time+
-                " วินาที";
+}
 
-            }
 
 
+if(time<=0){
 
-            if(time <=0){
 
+clearInterval(timer);
 
-                clearInterval(timer);
+location.reload();
 
 
-                location.reload();
+}
 
 
-            }
+},1000);
 
 
 
-        },1000);
+}catch(error){
 
 
+result.innerHTML =
+"❌ ส่งข้อมูลไม่สำเร็จ";
 
-    }catch(error){
 
-
-        result.innerHTML =
-        "❌ ส่งข้อมูลไม่สำเร็จ";
-
-
-    }
-
+}
 
 
 };
