@@ -1,142 +1,51 @@
-// ============================
-// Book Return System Script
-// ============================
+const rfidInput =
+document.getElementById("rfidInput");
 
 
-// หน้าแรก แตะเพื่อเริ่ม
-document.addEventListener("DOMContentLoaded", function(){
+const result =
+document.getElementById("result");
 
-    const idle = document.getElementById("idle");
 
-    if(idle){
+const returnBtn =
+document.getElementById("returnBtn");
 
-        document.body.addEventListener("click", function(){
 
-            window.location.href = "form.html";
+// รับ RFID จากเครื่องอ่าน
+rfidInput.focus();
 
-        });
 
-    }
 
+rfidInput.addEventListener(
+"keydown",
+function(e){
 
 
-    // ============================
-    // หน้ากรอกข้อมูล
-    // ============================
+if(e.key==="Enter"){
 
-    const sendBtn = document.getElementById("sendBtn");
 
+let rfid =
+rfidInput.value;
 
-    if(sendBtn){
 
-        sendBtn.addEventListener("click", function(){
+result.innerHTML =
+`
+<h3>✅ อ่าน RFID แล้ว</h3>
+<p>รหัส: ${rfid}</p>
+`;
 
-            const book =
-            document.getElementById("bookID").value.trim();
-
-
-            const email =
-            document.getElementById("email").value.trim();
-
-
-
-            if(book === "" || email === ""){
-
-                alert("กรุณากรอกข้อมูลให้ครบ");
-
-                return;
-
-            }
-
-
-
-            localStorage.setItem("bookID", book);
-
-            localStorage.setItem("email", email);
-
-
-
-            window.location.href = "receive.html";
-
-
-        });
-
-    }
-
-
-
-    // ============================
-    // หน้าวางหนังสือ
-    // ============================
-
-    const placedBtn =
-    document.getElementById("placedBtn");
-
-
-    if(placedBtn){
-
-
-        const receiveSound =
-        document.getElementById("receiveSound");
-
-
-        // เล่นเสียงรับข้อมูล
-        if(receiveSound){
-
-            receiveSound.play()
-            .catch(()=>{});
-
-        }
-
-
-
-        placedBtn.addEventListener("click", function(){
-
-
-            const checkingSound =
-            document.getElementById("checkingSound");
-
-
-            if(checkingSound){
-
-                checkingSound.play()
-                .catch(()=>{});
-
-            }
-
-
-
-            window.location.href = "checking.html";
-
-
-        });
-
-
-    }
-
-
-
-    // ============================
-    // หน้ากำลังตรวจสอบ
-    // ============================
-
-    const checkingPage =
-    document.getElementById("checkingPage");
-
-
-    if(checkingPage){
-
-
-        setTimeout(function(){
-
-            window.location.href="finish.html";
-
-
-        },4000);
-
-
-    }
-
+}
 
 
 });
+
+
+
+returnBtn.onclick=function(){
+
+
+alert(
+"เตรียมส่งข้อมูลคืนหนังสือ"
+);
+
+
+};
