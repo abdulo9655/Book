@@ -1,40 +1,62 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwLLZOVkKMhSHkkhBAC6NukjvP3beoSAu7VYXt71vQx4ZMkXwY-53aqpPjSU0wm1rruew/exec";
 // หน้าแรก
-if (document.getElementById("idle")) {
-    document.body.addEventListener("click", () => {
+const idle = document.getElementById("idle");
+
+if (idle) {
+
+    document.body.addEventListener("click", function(){
+
         window.location.href = "form.html";
+
     });
+
 }
+
 
 // หน้ากรอกข้อมูล
 const sendBtn = document.getElementById("sendBtn");
 
-if (sendBtn) {
-    sendBtn.addEventListener("click", () => {
+if(sendBtn){
 
-        const book = document.getElementById("bookID").value.trim();
-        const email = document.getElementById("email").value.trim();
+sendBtn.onclick = function(){
 
-        if (!book || !email) {
-            alert("กรุณากรอกข้อมูลให้ครบ");
-            return;
-        }
+    const book = document.getElementById("bookID").value;
+    const email = document.getElementById("email").value;
 
-        // พาร์ตต่อไปจะส่งข้อมูลไป Google Sheets ตรงนี้
+
+    if(book === "" || email === ""){
+
+        alert("กรุณากรอกข้อมูลให้ครบ");
+
+        return;
+
+    }
+
+
     localStorage.setItem("bookID",book);
+    localStorage.setItem("email",email);
 
-localStorage.setItem("email",email);
 
-window.location.href="receive.html";
-    });
+    window.location.href="receive.html";
+
+};
+
 }
-// หน้า receive
 
-const placedBtn=document.getElementById("placedBtn");
+
+// หน้าวางหนังสือ
+
+const placedBtn = document.getElementById("placedBtn");
+
 
 if(placedBtn){
 
-const speech=new SpeechSynthesisUtterance(
+placedBtn.onclick=function(){
+
+    window.location.href="checking.html";
+
+};
+
+}const speech=new SpeechSynthesisUtterance(
 
 "ระบบได้รับข้อมูลแล้ว กรุณาวางหนังสือไว้ในตู้ค่ะ"
 
