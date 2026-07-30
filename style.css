@@ -100,7 +100,89 @@ transform:translateY(0);
 50%{
 
 transform:translateY(-12px);
+.formCard{
 
+width:550px;
+
+background:white;
+
+padding:40px;
+
+border-radius:25px;
+
+box-shadow:0 20px 60px rgba(0,0,0,.2);
+
+}
+
+.formCard h1{
+
+color:#1565C0;
+
+margin-bottom:10px;
+
+}
+
+.desc{
+
+color:#666;
+
+margin-bottom:25px;
+
+}
+
+.formCard input{
+
+width:100%;
+
+padding:18px;
+
+font-size:18px;
+
+margin-bottom:18px;
+
+border-radius:12px;
+
+border:2px solid #ddd;
+
+outline:none;
+
+transition:.25s;
+
+}
+
+.formCard input:focus{
+
+border-color:#2196F3;
+
+}
+
+.formCard button{
+
+width:100%;
+
+padding:18px;
+
+font-size:20px;
+
+background:#1976D2;
+
+color:white;
+
+border:none;
+
+border-radius:15px;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.formCard button:hover{
+
+background:#0D47A1;
+
+}
 }
 
 100%{
