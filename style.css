@@ -192,3 +192,32 @@ transform:translateY(0);
 }
 
 }
+.loader{
+
+width:90px;
+
+height:90px;
+
+border:10px solid #ddd;
+
+border-top:10px solid #1976D2;
+
+border-radius:50%;
+
+margin:auto;
+
+animation:spin 1s linear infinite;
+
+margin-bottom:30px;
+
+}
+
+@keyframes spin{
+
+100%{
+
+transform:rotate(360deg);
+
+}
+
+}
