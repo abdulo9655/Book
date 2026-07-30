@@ -378,3 +378,39 @@ result.innerHTML =
 
 
 }
+let idleTimer;
+
+
+function resetIdle(){
+
+
+clearTimeout(idleTimer);
+
+
+
+idleTimer=setTimeout(()=>{
+
+
+location.reload();
+
+
+},60000);
+
+
+}
+
+
+
+document.addEventListener(
+"mousemove",
+resetIdle
+);
+
+
+document.addEventListener(
+"keydown",
+resetIdle
+);
+
+
+resetIdle();
