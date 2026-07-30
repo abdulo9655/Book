@@ -40,13 +40,31 @@ speech.lang="th-TH";
 
 speechSynthesis.speak(speech);
 
-placedBtn.onclick=()=>{
+placedBtn.onclick = async ()=>{
+
+const book =
+localStorage.getItem("bookID");
+
+const email =
+localStorage.getItem("email");
+
+await fetch(API_URL,{
+
+method:"POST",
+
+body:JSON.stringify({
+
+bookId:book,
+
+email:email
+
+})
+
+});
 
 window.location="checking.html";
 
 };
-
-}
 
 // หน้า checking
 
