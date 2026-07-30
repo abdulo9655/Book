@@ -162,6 +162,40 @@ font-size:20px;
 
 font-weight:bold;
 
+}.success-box{
+
+background:white;
+
+color:#008cff;
+
+padding:25px;
+
+border-radius:20px;
+
+animation:show .5s;
+
+}
+
+
+@keyframes show{
+
+from{
+
+transform:scale(.7);
+
+opacity:0;
+
+}
+
+
+to{
+
+transform:scale(1);
+
+opacity:1;
+
+}
+
 }
 
 
