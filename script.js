@@ -23,3 +23,48 @@ if (sendBtn) {
         window.location.href = "receive.html";
     });
 }
+// หน้า receive
+
+const placedBtn=document.getElementById("placedBtn");
+
+if(placedBtn){
+
+const speech=new SpeechSynthesisUtterance(
+
+"ระบบได้รับข้อมูลแล้ว กรุณาวางหนังสือไว้ในตู้ค่ะ"
+
+);
+
+speech.lang="th-TH";
+
+speechSynthesis.speak(speech);
+
+placedBtn.onclick=()=>{
+
+window.location="checking.html";
+
+};
+
+}
+
+// หน้า checking
+
+if(location.pathname.includes("checking")){
+
+const speech2=new SpeechSynthesisUtterance(
+
+"กำลังตรวจสอบ กรุณารอสักครู่ค่ะ"
+
+);
+
+speech2.lang="th-TH";
+
+speechSynthesis.speak(speech2);
+
+setTimeout(()=>{
+
+window.location="finish.html";
+
+},4000);
+
+}
