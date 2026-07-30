@@ -1,3 +1,31 @@
+const standby =
+document.getElementById("standby");
+
+
+const system =
+document.getElementById("system");
+
+
+
+if(standby){
+
+
+standby.onclick=function(){
+
+
+standby.style.display="none";
+
+
+system.style.display="block";
+
+
+document.getElementById("rfidInput").focus();
+
+
+};
+
+
+}
 const API_URL =
 "https://script.google.com/macros/s/AKfycbxXRl4vQ5zNHNIms1NmxDNOHwQ5wzzJ2O-GNGYsV1XjosjgTJCegbzEEtaGOST9duZ/exec";
 
