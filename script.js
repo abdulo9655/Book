@@ -1,120 +1,142 @@
-// =======================
-// หน้าแรก
-// =======================
-
-const idle = document.getElementById("idle");
-
-if(idle){
-
-    document.body.onclick = function(){
-
-        window.location.href = "form.html";
-
-    };
-
-}
+// ============================
+// Book Return System Script
+// ============================
 
 
+// หน้าแรก แตะเพื่อเริ่ม
+document.addEventListener("DOMContentLoaded", function(){
 
-// =======================
-// หน้าส่งคืน
-// =======================
+    const idle = document.getElementById("idle");
 
-const sendBtn = document.getElementById("sendBtn");
+    if(idle){
 
+        document.body.addEventListener("click", function(){
 
-if(sendBtn){
+            window.location.href = "form.html";
 
-    sendBtn.onclick = function(){
+        });
 
-        let book =
-        document.getElementById("bookID").value;
-
-
-        let email =
-        document.getElementById("email").value;
+    }
 
 
-        if(book==="" || email===""){
 
-            alert("กรุณากรอกข้อมูลให้ครบ");
+    // ============================
+    // หน้ากรอกข้อมูล
+    // ============================
 
-            return;
+    const sendBtn = document.getElementById("sendBtn");
+
+
+    if(sendBtn){
+
+        sendBtn.addEventListener("click", function(){
+
+            const book =
+            document.getElementById("bookID").value.trim();
+
+
+            const email =
+            document.getElementById("email").value.trim();
+
+
+
+            if(book === "" || email === ""){
+
+                alert("กรุณากรอกข้อมูลให้ครบ");
+
+                return;
+
+            }
+
+
+
+            localStorage.setItem("bookID", book);
+
+            localStorage.setItem("email", email);
+
+
+
+            window.location.href = "receive.html";
+
+
+        });
+
+    }
+
+
+
+    // ============================
+    // หน้าวางหนังสือ
+    // ============================
+
+    const placedBtn =
+    document.getElementById("placedBtn");
+
+
+    if(placedBtn){
+
+
+        const receiveSound =
+        document.getElementById("receiveSound");
+
+
+        // เล่นเสียงรับข้อมูล
+        if(receiveSound){
+
+            receiveSound.play()
+            .catch(()=>{});
 
         }
 
 
-        localStorage.setItem(
-            "bookID",
-            book
-        );
+
+        placedBtn.addEventListener("click", function(){
 
 
-        localStorage.setItem(
-            "email",
-            email
-        );
+            const checkingSound =
+            document.getElementById("checkingSound");
 
 
-        window.location.href =
-        "receive.html";
+            if(checkingSound){
 
-    };
+                checkingSound.play()
+                .catch(()=>{});
 
-}
+            }
 
 
 
-// =======================
-// หน้าวางหนังสือ
-// =======================
-
-const placedBtn =
-document.getElementById("placedBtn");
+            window.location.href = "checking.html";
 
 
-if(placedBtn){
+        });
 
 
-    // เสียงทันทีเมื่อเปิดหน้า
-
-    let speech =
-    new SpeechSynthesisUtterance(
-    "ระบบได้รับข้อมูลแล้ว กรุณาวางหนังสือไว้ในตู้ค่ะ"
-    );
-
-
-    speech.lang="th-TH";
-
-
-    speechSynthesis.speak(speech);
+    }
 
 
 
-    placedBtn.onclick=function(){
+    // ============================
+    // หน้ากำลังตรวจสอบ
+    // ============================
+
+    const checkingPage =
+    document.getElementById("checkingPage");
 
 
-        let speech2 =
-        new SpeechSynthesisUtterance(
-        "กำลังตรวจสอบ กรุณารอสักครู่ค่ะ"
-        );
+    if(checkingPage){
 
 
-        speech2.lang="th-TH";
+        setTimeout(function(){
+
+            window.location.href="finish.html";
 
 
-        speechSynthesis.speak(speech2);
+        },4000);
+
+
+    }
 
 
 
-        setTimeout(()=>{
-
-            window.location.href =
-            "checking.html";
-
-        },3000);
-
-
-    };
-
-}
+});
