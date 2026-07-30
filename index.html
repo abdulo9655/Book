@@ -1,41 +1,88 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Book Return Kiosk</title>
+<title>RFID Book Return</title>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
 
+
 <body>
 
-<div id="idle">
 
-    <div class="glass">
+<div class="box">
 
-        <div class="book">
-            📚
-        </div>
 
-        <h1>ระบบรับคืนหนังสืออัตโนมัติ</h1>
+<div class="icon">
+📚
+</div>
 
-        <p class="sub">
-            เปิดให้บริการ 24 ชั่วโมง
-        </p>
 
-        <div class="tap">
-            แตะหน้าจอเพื่อเริ่มใช้งาน
-        </div>
+<h1>
+RFID BOOK RETURN
+</h1>
 
-    </div>
+
+<p class="subtitle">
+ระบบคืนหนังสืออัตโนมัติ
+</p>
+
+
+
+<div class="scan">
+
+<div class="circle">
+📡
+</div>
+
+
+<h2>
+กรุณาแตะหนังสือ
+</h2>
+
+
+<p>
+รอรับสัญญาณ RFID...
+</p>
 
 </div>
 
+
+
+<input 
+id="rfidInput"
+placeholder="ช่องรับ RFID"
+autocomplete="off">
+
+
+
+<div id="result">
+
+</div>
+
+
+
+<button id="returnBtn">
+
+คืนหนังสือ
+
+</button>
+
+
+
+</div>
+
+
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
