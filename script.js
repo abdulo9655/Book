@@ -1,40 +1,243 @@
-const standby =
-document.getElementById("standby");
-
-
-const system =
-document.getElementById("system");
-
-
-
-if(standby){
-
-
-standby.onclick=function(){
-
-
-standby.style.display="none";
-
-
-system.style.display="block";
-
-
-document.getElementById("rfidInput").focus();
-
-
-};
-
-
-}
 const API_URL =
 "https://script.google.com/macros/s/AKfycbxXRl4vQ5zNHNIms1NmxDNOHwQ5wzzJ2O-GNGYsV1XjosjgTJCegbzEEtaGOST9duZ/exec";
 
 
+const standby = document.getElementById("standby");
+const system = document.getElementById("system");
 
 const rfidInput = document.getElementById("rfidInput");
 const result = document.getElementById("result");
 const returnBtn = document.getElementById("returnBtn");
 
+
+let currentBook = null;
+
+
+
+// แตะหน้าแรกเพื่อเริ่ม
+
+if(standby){
+
+standby.onclick=function(){
+
+    standby.style.display="none";
+
+    system.style.display="block";
+
+    setTimeout(()=>{
+
+        if(rfidInput){
+            rfidInput.focus();
+        }
+
+    },300);
+
+};
+
+}
+
+
+
+// แก้ RFID เพี้ยน
+
+function normalizeRFID(input){
+
+const map={
+
+"จ":"0",
+"ข":"1",
+"ฃ":"2",
+"๓":"3",
+"๔":"4",
+"ู":"5",
+"ึ":"6",
+"ค":"7",
+"ต":"8",
+"ๅ":"1",
+"ภ":"2",
+"ถ":"3",
+"ุ":"4"
+
+};
+
+
+let result="";
+
+
+for(let c of input){
+
+result += map[c] ?? c;
+
+}
+
+
+return result;
+
+}
+
+
+
+
+// อ่าน RFID
+
+if(rfidInput){
+
+rfidInput.addEventListener("keydown",async(e)=>{
+
+
+if(e.key==="Enter"){
+
+
+let rfid =
+normalizeRFID(
+rfidInput.value.trim()
+);
+
+
+
+if(!rfid)return;
+
+
+
+result.innerHTML =
+"⏳ กำลังค้นหา...";
+
+
+
+try{
+
+
+let res =
+await fetch(API_URL,{
+
+method:"POST",
+
+body:JSON.stringify({
+
+rfid:rfid
+
+})
+
+});
+
+
+
+let data =
+await res.json();
+
+
+
+if(data.success){
+
+
+currentBook=data.book;
+
+
+result.innerHTML=`
+
+<h2>✅ พบหนังสือ</h2>
+
+<p>📚 ${data.book.name}</p>
+
+<p>รหัส ${data.book.code}</p>
+
+`;
+
+
+}else{
+
+
+result.innerHTML="❌ ไม่พบหนังสือ";
+
+
+}
+
+
+}catch(err){
+
+result.innerHTML="⚠️ เชื่อมต่อไม่ได้";
+
+}
+
+
+}
+
+
+});
+
+}
+
+
+
+
+// คืนหนังสือ
+
+if(returnBtn){
+
+returnBtn.onclick=async()=>{
+
+
+if(!currentBook){
+
+alert("กรุณาแตะ RFID ก่อน");
+
+return;
+
+}
+
+
+
+let email =
+prompt("กรอก Email");
+
+
+if(!email)return;
+
+
+
+result.innerHTML="⏳ กำลังส่งข้อมูล...";
+
+
+
+await fetch(API_URL,{
+
+method:"POST",
+
+body:JSON.stringify({
+
+rfid:currentBook.rfid,
+
+email:email
+
+})
+
+});
+
+
+
+result.innerHTML=`
+
+<h1>✅ คืนหนังสือสำเร็จ</h1>
+
+<p>ส่ง Email แล้ว</p>
+
+<p>ขอบคุณที่ใช้บริการ</p>
+
+`;
+
+
+
+setTimeout(()=>{
+
+location.reload();
+
+},8000);
+
+
+
+};
+
+}
 
 
 let currentBook = null;
